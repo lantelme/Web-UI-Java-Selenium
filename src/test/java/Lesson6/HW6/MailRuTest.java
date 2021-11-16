@@ -1,10 +1,9 @@
 package Lesson6.HW6;
 
 import io.github.bonigarcia.wdm.WebDriverManager;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import io.qameta.allure.Description;
+import io.qameta.allure.Story;
+import org.junit.jupiter.api.*;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,6 +13,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
+@Story("Mail.ru тесты")
 public class MailRuTest {
     WebDriver driver;
     WebDriverWait webDriverWait;
@@ -30,10 +30,17 @@ public class MailRuTest {
         driver.get("https://mail.ru/");
     }
 
-    @Test
-    public void checkingUnreadMessagesUsingAFilter() throws InterruptedException {
-        login();
 
+    @Test
+    @DisplayName("Применение фильтра")
+    @Description("Проверка непрочитанных сообщений при установке фильтра")
+    public void checkingUnreadMessagesUsingAFilter() throws InterruptedException {
+        new LoginPage(driver)
+                .fillLogin("test1234522@mail.ru")
+                .buttonPassword()
+                .fillPassword("sUuRIayp1A9(")
+                .submitLogin();
+        Thread.sleep(5000);
         new UsingFilter(driver)
                 .findFilterPage()
                 .useFilterPage();
@@ -43,9 +50,15 @@ public class MailRuTest {
     }
 
     @Test
+    @DisplayName("Отправление сообщений")
+    @Description("Проверка отправки сообщений")
     public void checkSendMessage() throws InterruptedException {
-        login();
-        Thread.sleep(5000);
+        new LoginPage(driver)
+                .fillLogin("test1234522@mail.ru")
+                .buttonPassword()
+                .fillPassword("sUuRIayp1A9(")
+                .submitLogin();
+        Thread.sleep(10000);
         new FillAndSentMessage(driver)
                 .createNewMessage()
                 .writeToWhomMessage("albuzik97@gmail.com")
